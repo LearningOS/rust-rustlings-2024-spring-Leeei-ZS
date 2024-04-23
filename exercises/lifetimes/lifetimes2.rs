@@ -6,13 +6,14 @@
 // Execute `rustlings hint lifetimes2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+// // I AM NOT DONE
 
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+// 既然引用会导致生命周期冲突，那直接不使用引用
+fn longest<'a>(x: &'a str, y: &'a str) -> String {
     if x.len() > y.len() {
-        x
+        x.to_string()
     } else {
-        y
+        y.to_string()
     }
 }
 
@@ -21,6 +22,7 @@ fn main() {
     let result;
     {
         let string2 = String::from("xyz");
+        // result 活的跟 longest 函数中最短的一样
         result = longest(string1.as_str(), string2.as_str());
     }
     println!("The longest string is '{}'", result);
