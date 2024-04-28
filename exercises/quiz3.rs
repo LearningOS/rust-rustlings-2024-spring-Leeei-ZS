@@ -16,7 +16,7 @@
 //
 // Execute `rustlings hint quiz3` or use the `hint` watch subcommand for a hint.
 
-// // I AM NOT DONE
+//
 
 pub struct ReportCard<T> {
     pub grade: T,
@@ -24,16 +24,10 @@ pub struct ReportCard<T> {
     pub student_age: u8,
 }
 
-pub trait Print {
-    fn print(&self) -> String;
-}
-// 不是很懂啊
-// 首先，在方法中使用泛型需要添加T，如：impl<T>
-// 其次，可以对 impl<T> 中的 T 作限定条件，例如：T: std::fmt::Display，限定泛型必须实现过 Display 这个特征
-// 最后，这种 T + : + 特征 的形式是泛型特有的，定义了泛型必须满足的条件，称之为特征约束。一般 变量 + : + 类型 定义了变量的类型
-impl<T: std::fmt::Display> Print for ReportCard<T> {
-    fn print(&self) -> String {
-        format!("{} ({}) - achieved a grade of {}", &self.student_name, &self.student_age, &self.grade)
+impl<T: std::fmt::Display> ReportCard<T> {
+    pub fn print(&self) -> String {
+        format!("{} ({}) - achieved a grade of {}",
+            &self.student_name, &self.student_age, &self.grade)
     }
 }
 
@@ -56,9 +50,8 @@ mod tests {
 
     #[test]
     fn generate_alphabetic_report_card() {
-        // TODO: Make sure to change the grade here after you finish the exercise.
         let report_card = ReportCard {
-            grade: "A+",
+            grade: "A+".to_string(),
             student_name: "Gary Plotter".to_string(),
             student_age: 11,
         };

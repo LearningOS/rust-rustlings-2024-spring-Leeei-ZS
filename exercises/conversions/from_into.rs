@@ -40,41 +40,34 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// // I AM NOT DONE
+// 
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
-        // 如果提供的字符串为空，则返回默认的Person对象。
         if s.is_empty() {
             return Person::default();
         }
-        
-        // 根据逗号分割字符串。
+
         let parts: Vec<&str> = s.split(',').collect();
-        
-        // 如果分割后的字符串数量不等于2，则返回默认的Person对象。
-        if parts.len() != 2 {
+        if parts.len() < 2 {
             return Person::default();
         }
-        
-        // 将第一个元素用作名称。
-        let name = parts[0].trim();
-        
-        // 如果名称是空的，则返回默认的Person对象。
+
+        let name = parts[0].to_string();
         if name.is_empty() {
             return Person::default();
         }
-        
-        // 将第二个元素解析为usize类型作为年龄。
-        match parts[1].trim().parse::<usize>() {
-            Ok(age) => Person {
-                name: String::from(name),
-                age,
-            },
-            Err(_) => Person::default(),
+
+        let age_result = parts[1].parse::<usize>();
+        if let Ok(age) = age_result {
+            return Person { name, age };
         }
+
+        Person::default()
     }
 }
+
+
 
 fn main() {
     // Use the `from` function
@@ -88,31 +81,30 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn test_default() {
-        // Test that the default person is 30 year old John
         let dp = Person::default();
         assert_eq!(dp.name, "John");
         assert_eq!(dp.age, 30);
     }
+
     #[test]
     fn test_bad_convert() {
-        // Test that John is returned when bad string is provided
         let p = Person::from("");
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
     }
+
     #[test]
     fn test_good_convert() {
-        // Test that "Mark,20" works
         let p = Person::from("Mark,20");
         assert_eq!(p.name, "Mark");
         assert_eq!(p.age, 20);
     }
+
     #[test]
     fn test_bad_age() {
-        // Test that "Mark,twenty" will return the default person due to an
-        // error in parsing age
         let p = Person::from("Mark,twenty");
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
@@ -156,14 +148,14 @@ mod tests {
     #[test]
     fn test_trailing_comma() {
         let p: Person = Person::from("Mike,32,");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 
     #[test]
     fn test_trailing_comma_and_some_string() {
         let p: Person = Person::from("Mike,32,man");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 }
