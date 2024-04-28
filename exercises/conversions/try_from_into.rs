@@ -27,7 +27,7 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
+// // I AM NOT DONE
 
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
@@ -41,6 +41,20 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        if let (r, g, b) = tuple {
+            if r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255 {
+                Ok(Color {
+                    red: r as u8,
+                    green: g as u8,
+                    blue: b as u8
+                })
+            } else {
+                Err(IntoColorError::IntConversion)
+            }
+        } else {
+            Err(IntoColorError::BadLen)
+        }
+        
     }
 }
 
@@ -48,6 +62,19 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        if let [r, g, b] = arr {
+            if r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255 {
+                Ok(Color {
+                    red: r as u8,
+                    green: g as u8,
+                    blue: b as u8
+                })
+            } else {
+                Err(IntoColorError::IntConversion)
+            }
+        } else {
+            Err(IntoColorError::BadLen)
+        }
     }
 }
 
@@ -55,14 +82,31 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if let [r, g, b] = *slice {
+            if r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255 {
+                Ok(Color {
+                    red: r as u8,
+                    green: g as u8,
+                    blue: b as u8
+                })
+            } else {
+                Err(IntoColorError::IntConversion)
+            }
+        } else {
+            return Err(IntoColorError::BadLen);
+        }
+        
     }
 }
 
 fn main() {
+    // try_from 和 try_into 的用法区别
+
     // Use the `try_from` function
     let c1 = Color::try_from((183, 65, 14));
     println!("{:?}", c1);
 
+    // 尝试把数组转换成 Result<Color, _>
     // Since TryFrom is implemented for Color, we should be able to use TryInto
     let c2: Result<Color, _> = [183, 65, 14].try_into();
     println!("{:?}", c2);

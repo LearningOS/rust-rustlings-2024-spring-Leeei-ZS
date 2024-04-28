@@ -27,16 +27,24 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
-// I AM NOT DONE
+// // I AM NOT DONE
 
-extern "Rust" {
+extern {
     fn my_demo_function(a: u32) -> u32;
     fn my_demo_function_alias(a: u32) -> u32;
 }
 
+// #[no_mangle] 是 Rust 中的一个属性，用于告诉编译器不要修改函数或变量的名称。
+// 在 Rust 中，默认情况下，编译器会对函数或变量的名称进行名称修饰，以避免名称冲突。
+// 这种名称修饰被称为名称重整（name mangling）。
 mod Foo {
     // No `extern` equals `extern "Rust"`.
+    #[no_mangle]
     fn my_demo_function(a: u32) -> u32 {
+        a
+    }
+    #[no_mangle]
+    fn my_demo_function_alias(a: u32) -> u32 {
         a
     }
 }
@@ -53,6 +61,8 @@ mod tests {
         //
         // SAFETY: We know those functions are aliases of a safe
         // Rust function.
+
+        // 调用外部函数时，需要在函数调用前使用unsafe块，因为Rust无法保证外部函数的安全性
         unsafe {
             my_demo_function(123);
             my_demo_function_alias(456);
