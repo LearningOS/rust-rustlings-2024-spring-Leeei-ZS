@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// // I AM NOT DONE
+//
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -44,7 +44,7 @@ impl<T> LinkedList<T> {
         }
     }
 }
-impl<T: PartialOrd + Clone> LinkedList<T> {
+impl<T: PartialOrd + Clone + std::cmp::PartialOrd> LinkedList<T> {
 
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
@@ -70,6 +70,11 @@ impl<T: PartialOrd + Clone> LinkedList<T> {
                 _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
             },
         }
+    }
+
+    // 一个获取链表长度的方法
+    pub fn len(&mut self) -> i32 {
+        self.length.try_into().unwrap()  // 直接访问 length 字段
     }
 
 	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self {
